@@ -11,20 +11,18 @@ private val truthiness_list = mutableListOf<Boolean>()
 private val conditions = mutableListOf<Statement>()
 private val conclusions = mutableListOf<Statement>()
 
+fun clear() {
+    variables.clear()
+    values.clear()
+    truthiness_list.clear()
+}
+
 object DECLARE {
 
     @Suppress("FunctionName")
     infix fun IF(variable: LinguisticVariable): IsObject {
         variables.add(variable)
         return IsObject
-    }
-
-    fun clear() {
-        variables.clear()
-        values.clear()
-        truthiness_list.clear()
-        conditions.clear()
-        conclusions.clear()
     }
 }
 
@@ -41,16 +39,22 @@ object AndThenObject {
 
     @Suppress("FunctionName")
     infix fun THEN(variable: LinguisticVariable): IsObject {
+        for (i in 0 until variables.size) {
+            conditions.add(Statement(variables[i], values[i], truthiness_list[i]))
+        }
+        clear()
         return andThenAction(variable)
     }
 
-    fun getRule(): Rule {
+    @Suppress("FunctionName", "UNUSED_PARAMETER")
+    infix fun END(declare: DECLARE): Rule {
         for (i in 0 until variables.size) {
             conclusions.add(Statement(variables[i], values[i], truthiness_list[i]))
         }
-        val rule = Rule(conditions.toSet(), conclusions.toSet())
-        DECLARE.clear()
-        return rule
+        clear()
+        conditions.clear()
+        conclusions.clear()
+        return Rule(conditions.toSet(), conclusions.toSet())
     }
 }
 

@@ -12,6 +12,10 @@ class Car(private val color: String) : RuleSubject {
         }
     }
 
+    override fun toString(): String {
+        return "car"
+    }
+
 }
 
 
@@ -40,7 +44,7 @@ fun main() {
     val red = color.getValue("red")
 
     val size = LinguisticVariable.get("size")
-    val large = color.getValue("green")
+    val large = size.getValue("large")
 
     val aesthetic = LinguisticVariable.get("aesthetic")
     val ugly = aesthetic.getValue("ugly")
@@ -51,9 +55,8 @@ fun main() {
 
     assert(statement.isTrue(car))
 
-    val rule0 = (
-        DECLARE IF color IS green AND size IS large AND color IS_NOT red THEN aesthetic IS ugly
-    ).getRule()
+    val rule0 =
+        DECLARE IF color IS green AND size IS_NOT large THEN aesthetic IS ugly AND size IS large END DECLARE
     assert(rule0.isTrue(car))
 
 }

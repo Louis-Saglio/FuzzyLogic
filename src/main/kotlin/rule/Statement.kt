@@ -11,6 +11,8 @@ class LinguisticVariable private constructor(
 
     fun getValue(value: String) = possibleValues.find { it.name == value } ?: throw LinguisticValueNotFound(name)
 
+    override fun toString() = name
+
     companion object {
         private val allLinguisticVariablesByName = mutableMapOf<String, LinguisticVariable>()
 
@@ -41,4 +43,8 @@ class Statement(
     private val isTrue: Boolean
 ) {
     fun isTrue(subject: RuleSubject) = (subject.getVariableValue(variable) == value) == isTrue
+
+    override fun toString(): String {
+        return "Subject $variable is${if (isTrue) " " else " not "}$value"
+    }
 }
